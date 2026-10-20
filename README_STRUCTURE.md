@@ -1,96 +1,84 @@
-# RetailPulse refactored structure
+# RetailPulse — Repository Structure and Developer Notes
 
-This package groups implementation by functional requirement:
+This document describes the current functional-area layout on the `main` branch. The source tree is evolving; check the actual filenames before relying on older package/module names.
 
-- `f01_data_pipeline`: ingestion, cleaning, validation, referential integrity, duplicate/missing-value analysis, consolidated reporting.
-- `f02_customer_segmentation`: RFM aggregation, feature preprocessing, K-Means baseline and profiling.
-- `f03_demand_forecasting`: daily demand aggregation, feature utilities, optional Prophet baseline and metrics. LSTM/hybrid are explicit placeholders and are not claimed as implemented.
-- `f04_churn_prediction`: inactivity-based churn proxy and baseline classifier. This proxy is not observed churn; validate the label with business stakeholders.
-- `f05_inventory_optimization`: demand inputs and baseline reorder recommendations. The default 7-day lead time is an assumption, not a known supplier SLA.
-- `f06_dashboard`: Streamlit interface to available outputs.
+## Dataset source
 
-## Install/update dependencies
+The seven source CSV files are hosted in the [RetailPulse Hugging Face dataset repository](https://huggingface.co/datasets/RS2226/RetailPulse), not committed to GitHub. See [DATASETS.md](DATASETS.md) for the file manifest, retrieval instructions, access notes, and data-handling cautions.
 
-From repository root (Windows PowerShell):
+Expected source files:
 
-```powershell
-uv pip install -e .
-```
+- `customer_master.csv`
+- `inventory_snapshot.csv`
+- `promotions.csv`
+- `sales_transactions.csv`
+- `sku_inventory_flags.csv`
+- `sku_master.csv`
+- `store_master.csv`
 
-If you prefer adding dependencies through uv's project workflow:
+The repository page is publicly discoverable, but file downloads can require authentication if access gating is enabled. Never commit access tokens.
 
-```powershell
+## Functional areas
+
+- **F01 — Data Ingestion & Cleaning:** dataset inspection, Hugging Face retrieval checks, preparation pipeline, validation, relationship checks, duplicate and missing-value analysis, consistency checks, and quality reporting.
+- **F02 — Customer Segmentation:** exploratory analysis, RFM/behavioural feature engineering, preprocessing, clustering, evaluation, and segment profiling.
+- **F03 — Demand Forecasting:** project scope and documentation; verify that implementation files and dependencies exist before running a forecast.
+- **F04 — Churn Prediction:** project scope and documentation; churn labels and model metrics require validation.
+- **F05 — Inventory Optimization:** project scope and documentation; lead-time and stock-policy assumptions require confirmation.
+- **F06 — Analytics Dashboard:** planned Streamlit interface; confirm implementation and deployment status before advertising a live demo.
+
+Project acceptance criteria are defined in the project brief. They are targets until measured and documented from repeatable runs.
+
+## Environment
+
+From the repository root:
+
+~~~powershell
 uv sync
-```
+~~~
 
-## Run F01
+Use Python 3.11 or later. The project dependencies are declared in `pyproject.toml`.
 
-Ensure the seven CSV files are in `data/raw` (or run the Hugging Face downloader):
+## F01 — Inspect datasets
 
-```powershell
-uv run python -m retailpulse.f01_data_pipeline.ingestion
-uv run python -m retailpulse.f01_data_pipeline.pipeline
-uv run python -m retailpulse.f01_data_pipeline.validation
-uv run python -m retailpulse.f01_data_pipeline.relationship_checks
-uv run python -m retailpulse.f01_data_pipeline.duplicate_analysis
-uv run python -m retailpulse.f01_data_pipeline.missing_value_analysis
-uv run python -m retailpulse.f01_data_pipeline.quality_report
-```
+~~~powershell
+uv run python "src/retailpulse/F01 - Data Ingestion & Cleaning/01_inspect_datasets.py"
+~~~
 
-## Run F02
+The inspection script reads sales data in 100,000-row chunks and writes reports under `reports/dataset_inspection/`. Review the generated reports for schema, missing values, duplicate counts, and data dimensions. The chunk-based duplicate check may not detect duplicates spanning different chunks.
 
-```powershell
-uv run python -m retailpulse.f02_customer_segmentation.feature_engineering
-uv run python -m retailpulse.f02_customer_segmentation.eda
-uv run python -m retailpulse.f02_customer_segmentation.clustering
-uv run python -m retailpulse.f02_customer_segmentation.evaluation
-uv run python -m retailpulse.f02_customer_segmentation.segment_profiling
-```
+## F01 — Verify Hugging Face access
 
-## Run F03 (daily demand table can be large)
+~~~powershell
+uv run python "src/retailpulse/F01 - Data Ingestion & Cleaning/02_verify_huggingface_dataset.py"
+~~~
 
-```powershell
-uv run python -m retailpulse.f03_demand_forecasting.data_preparation
-uv run python -m retailpulse.f03_demand_forecasting.prophet_model --sku-id YOUR_SKU_ID --horizon 30
-```
+This verification script checks the customer master CSV. It does not by itself verify every source file.
 
-Install optional Prophet dependency before running the model:
+## F01 — Run the preparation pipeline
 
-```powershell
-uv add prophet
-```
+~~~powershell
+uv run python "src/retailpulse/F01 - Data Ingestion & Cleaning/03_pipeline.py"
+~~~
 
-## Run F04
+Review the script configuration and expected outputs before processing the full dataset.
 
-Requires F02 RFM features first:
+## F02 — Customer segmentation
 
-```powershell
-uv run python -m retailpulse.f04_churn_prediction.churn_labeling
-uv run python -m retailpulse.f04_churn_prediction.feature_engineering
-uv run python -m retailpulse.f04_churn_prediction.model_training
-```
+The current folder includes scripts for EDA, feature engineering, preprocessing, clustering, evaluation, and segment profiling. Read the [F02 module README](src/retailpulse/F02%20-%20Customer%20Segmentation/readme.md), confirm each script's expected inputs and outputs, and run them in the appropriate dependency order.
 
-## Run F05
+## Data-quality cautions
 
-```powershell
-uv run python -m retailpulse.f03_demand_forecasting.data_preparation
-uv run python -m retailpulse.f05_inventory_optimization.demand_inputs
-uv run python -m retailpulse.f05_inventory_optimization.reorder_policy
-uv run python -m retailpulse.f05_inventory_optimization.optimization
-uv run python -m retailpulse.f05_inventory_optimization.evaluation
-```
+- Do not remove duplicate-looking sales rows until transaction grain and business meaning are confirmed.
+- Treat missing values according to field semantics; avoid blanket imputation.
+- Validate join keys and referential integrity before combining tables.
+- Use chronological holdouts for forecasting and avoid leakage from future data.
+- Treat inactivity-derived churn labels as a proxy until the business definition is validated.
+- Treat the default seven-day inventory lead time, if used, as an assumption rather than a confirmed supplier service level.
 
-## Run dashboard
+## Development standards
 
-```powershell
-uv run streamlit run src/retailpulse/f06_dashboard/app.py
-```
-
-## Important cautions
-
-- Back up your existing project before moving files.
-- This is a structured starter implementation, not a claim that all functional requirements or target metrics have been achieved.
-- Do not delete duplicate sales rows until the transaction grain has been confirmed.
-- Missing `promo_id` values may mean no promotion, but this should be confirmed.
-- Missing inventory-flag dates should not be imputed without understanding the flag semantics.
-- Forecasting and churn evaluation must use leakage-safe chronological or otherwise appropriate holdouts before comparing against project targets.
+- Keep code modular and changes scoped to functional requirements.
+- Do not commit source datasets, credentials, API keys, local machine paths, or generated model binaries.
+- Add tests for transformations, feature logic, validation rules, and model evaluation as those components are implemented.
+- Document the exact command, environment, dataset revision, and measured metrics for any reported result.
