@@ -90,6 +90,7 @@ RetailPulse/
 │   └── processed/                      # local generated outputs
 ├── reports/                            # generated quality reports
 ├── pyproject.toml
+├── .gitignore
 ├── DATASETS.md
 ├── README_STRUCTURE.md
 ├── README.md
