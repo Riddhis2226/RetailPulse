@@ -2,6 +2,34 @@
 
 > **RetailPulse | Functional Requirement 03**
 
+## Dataset
+
+RetailPulse uses the project-owned Hugging Face dataset repository **[RS2226/RetailPulse](https://huggingface.co/datasets/RS2226/RetailPulse)**. The repository is currently marked **gated** on Hugging Face, so access may require permission from the dataset owner and authentication. The ingestion scripts reference seven CSV files:
+
+| File | Intended data domain |
+|---|---|
+| `customer_master.csv` | Customer master records and customer attributes |
+| `inventory_snapshot.csv` | Inventory snapshots |
+| `promotions.csv` | Promotion records |
+| `sales_transactions.csv` | Retail sales transactions (large file; the inspection script reads this file in 100,000-row chunks) |
+| `sku_inventory_flags.csv` | SKU-level inventory flags |
+| `sku_master.csv` | Product/SKU master records |
+| `store_master.csv` | Store master records |
+
+These descriptions are based on the filenames and repository scripts. Confirm the exact columns, data types, row counts, date coverage, and join keys by running the F01 dataset inspection; those figures should not be assumed from filenames alone.
+
+**Retrieval:** The code uses `huggingface_hub.hf_hub_download` with dataset repository ID `RS2226/RetailPulse` and repository type `dataset`. Access the repository from the link above and authenticate with an authorized Hugging Face account if prompted. Do not commit access tokens or credentials.
+
+
+## Dataset Use in F03
+
+- **Primary input:** `sales_transactions.csv`, used to construct daily demand time series.
+- **Grouping dimensions:** store and SKU identifiers, subject to confirmation of the actual column names.
+- **Potential supporting inputs:** `promotions.csv`, `store_master.csv`, `sku_master.csv`, and `sku_inventory_flags.csv`, if their fields and semantics are validated for forecasting.
+
+The sales file is treated as a large dataset by F01 and is inspected in 100,000-row chunks. Build aggregated store–SKU–date series rather than repeatedly loading the raw transaction file into interactive dashboard code. Exact row counts, date range, demand measure, and missing-date policy should be derived from F01 reports, not guessed.
+
+
 ## Objective
 
 Estimate future product demand from historical retail sales to support replenishment planning, inventory decisions, and forward-looking business analysis.
