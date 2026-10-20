@@ -1,186 +1,185 @@
+# RetailPulse – AI-Powered Customer Analytics & Demand Forecasting Platform
 
-# RetailPulse
+RetailPulse is a retail analytics project that helps businesses analyze sales, customer behavior, demand patterns, and inventory.
 
-<div align="center">
+## Features
 
-### Retail Analytics · Customer Intelligence · Demand Planning
+- 📊 **Sales & Revenue Analytics** — Analyze sales performance, revenue trends, and business KPIs.
+- 👥 **Customer Segmentation** — Group customers based on purchasing behavior and value.
+- 🎯 **RFM Analysis** — Segment customers using Recency, Frequency, and Monetary metrics.
+- 📈 **Demand Forecasting** — Visualize historical sales patterns and forecast future demand.
+- 📦 **Inventory Analytics** — Monitor inventory levels, stock availability, and inventory performance.
+- 🛍️ **Product & SKU Analytics** — Explore product-level performance and identify sales trends.
+- 🏬 **Store Performance Analysis** — Compare sales and performance across retail locations.
+- 🏷️ **Promotion & Discount Analysis** — Examine promotional activity, discounts, and their relationship with sales.
+- 📱 **Interactive Streamlit Dashboard** — Explore analytics and visualizations through an interactive user interface.
+- 📉 **Data Visualization with Plotly** — Present business insights using interactive charts and graphs.
+- 🔐 **User Authentication** — Provide secure account registration and login.
+- 🛡️ **Role-Based Access Control (RBAC)** — Restrict dashboard features according to user roles.
+- 📝 **Audit Logging** — Track relevant user and administrative activities.
+- 🗄️ **Database Integration** — Store and manage application data using database technologies.
+- 🧹 **Data Quality & Anomaly Analysis** — Explore clean and contaminated retail datasets to investigate data quality issues.
+- 🐳 **Docker Containerization** — Package the application and its dependencies into a container.
+- ☁️ **Cloud Deployment** — Deploy and access the application online using Render.
+- 🔗 **Version Control with Git & GitHub** — Track code changes and maintain the project repository.
+- 📂 **Large Dataset Management** — Host large retail datasets separately from the main source-code repository.
 
-**A modular retail analytics and machine-learning project for exploring customer behaviour, forecasting product demand, identifying churn risk, and supporting inventory decisions.**
 
-[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Pandas](https://img.shields.io/badge/Data-Pandas%20%7C%20NumPy-150458)](https://pandas.pydata.org/)
-[![scikit-learn](https://img.shields.io/badge/ML-scikit--learn-orange)](https://scikit-learn.org/)
-[![Hugging Face Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-yellow?logo=huggingface)](https://huggingface.co/datasets/RS2226/RetailPulse)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+### Technologies Used
 
-</div>
+- **Programming Language:** Python
+- **Data Analysis & Processing:** Pandas, NumPy
+- **Machine Learning & Predictive Analytics:** Scikit-learn, Prophet, LSTM
+- **Dashboard & Data Visualization:** Streamlit, Plotly
+- **Database & ORM:** PostgreSQL, SQLite, SQLAlchemy
+- **Authentication & Security:** Argon2, Authlib, Role-Based Access Control (RBAC)
+- **Containerization:** Docker
+- **Deployment & Hosting:** Render
+- **Version Control & Collaboration:** Git, GitHub
+- **Dataset Hosting:** Hugging Face Datasets
+- **Development Environment:** Fedora Linux, Visual Studio Code, Jupyter Notebook
+- **Python Environment & Dependency Management:** Python Virtual Environments (venv), pip
 
----
+## Relationships
 
-## 1. Project Overview
+```ini
+store_master.store_id        ──┐
+sku_master.sku_id             ─┼──▶ sales_transactions.csv
+customer_master.cust_id       ─┤     (store_id, sku_id, customer_id, promo_id)
+promotions.promo_id           ─┘
+```
 
-RetailPulse is designed around an end-to-end retail analytics workflow: source-data inspection, customer-level feature engineering, predictive modelling, inventory recommendations, and interactive reporting.
+## Column Reference
 
-The project requirements define six functional areas. The repository is being developed in stages, so the status labels below distinguish implemented starter code from planned components. Targets in the project brief are **acceptance criteria, not measured results**.
+__store_master.csv__
 
-## 2. Functional Requirements and Status
-
-| ID | Requirement | Intended scope / acceptance criteria | Repository status |
-|---|---|---|---|
-| **F01** | Data ingestion & cleaning | Retrieve the seven source CSVs from Hugging Face, clean conservatively, write Parquet outputs in chunks, and emit a JSON run report. | Canonical package and regression tests are present; full-dataset execution and deployment-resource needs must still be verified. |
-| **F02** | Customer segmentation | RFM and behavioural features; K-Means/DBSCAN exploration; segment evaluation and business profiling. Target: 6–8 interpretable segments. | Starter scripts for feature engineering, clustering, evaluation, and profiling are present. Segment count and quality are not claimed. |
-| **F03** | Demand forecasting | Daily demand preparation and 30-day forecasts; Prophet + LSTM/hybrid approach in the project brief. Target: MAPE ≤ 12%. | Requirements and module documentation exist; end-to-end forecasting and target performance remain unverified. |
-| **F04** | Churn prediction | Identify at-risk customers with a clearly defined churn label and evaluated classifier. Targets: AUC-ROC ≥ 0.88 and precision@top 20% ≥ 0.75. | Module documentation exists; label validity, trained model, and metrics must be verified before reporting results. |
-| **F05** | Inventory optimization | Forecast-informed reorder recommendations with explicit lead-time and safety-stock assumptions. | Module documentation exists; operational recommendations and impact are not claimed as validated. |
-| **F06** | Interactive analytics dashboard | Streamlit views for sales, customers, forecasts, and inventory, including exportable insights and what-if analysis. | Planned; verify the dashboard implementation and deployment before presenting a live demo. |
-
-### Project-wide non-functional targets
-
-The project brief also sets goals for scalable processing, daily batch jobs under five minutes, reproducible experiment tracking, and data/model monitoring. These goals should be measured with repeatable tests before being described as achieved. Business-impact figures such as stockout reduction or revenue growth are aspirations from the brief, not current project results.
-
-## 3. Source Data — Hugging Face
-
-**The seven source CSV datasets are hosted in the RetailPulse Hugging Face dataset repository; they are not stored in this GitHub repository.**
-
-**Dataset repository:** [RS2226/RetailPulse on Hugging Face](https://huggingface.co/datasets/RS2226/RetailPulse)  
-**Dataset documentation:** [DATASETS.md](DATASETS.md)  
-**Reported repository size in the dataset page:** approximately 805 MB (may change as files are updated).
-
-| Source file | Intended data domain |
+| Column | Description |
 |---|---|
-| **customer_master.csv** | Customer master records and customer attributes |
-| **inventory_snapshot.csv** | Inventory snapshots |
-| **promotions.csv** | Promotion records |
-| **sales_transactions.csv** | Transaction-level sales; the inspection script reads this file in chunks |
-| **sku_inventory_flags.csv** | SKU-level inventory flags |
-| **sku_master.csv** | Product/SKU master records |
-| **store_master.csv** | Store master records |
+| store_id | Unique store identifier (e.g. `ST01`) |
+| store_name | Store display name |
+| city | City the store operates in |
+| store_type | Hypermarket / Supermarket / Convenience Store / Express Store |
+| opening_date | Date the store opened |
 
-The Hugging Face repository page is publicly discoverable. **File access may still require a signed-in, authorized Hugging Face account if repository gating is enabled.** Check the dataset page for the current access status. The code uses Hugging Face Hub to retrieve source files. Never put access tokens or credentials in source control.
+__sku_master.csv__
 
-Schema details, exact row counts, date coverage, and join keys should be taken from the generated F01 inspection report rather than inferred from filenames.
-
-## 4. Technology
-
-| Layer | Technologies |
+| Column | Description |
 |---|---|
-| Language and data processing | Python 3.11+, Pandas, NumPy, PyArrow, DuckDB |
-| Machine learning | scikit-learn, PyTorch / Lightning |
-| Forecasting and statistics | Prophet, statsmodels |
-| Experiment tracking / tuning | MLflow, Optuna |
-| Data access / configuration | Hugging Face Hub, SQLAlchemy, PostgreSQL driver, python-dotenv |
-| Intended dashboard | Streamlit |
+| sku_id | Unique product identifier (e.g. `SKU00001`) |
+| sku_name | Product display name |
+| category | Top-level product category |
+| subcategory | Product subcategory |
+| unit_price | Retail selling price |
+| cost_price | Cost to the retailer (always < unit_price) |
+| brand | Product brand |
 
-Some dependencies support planned or optional components and do not imply that every capability is already implemented. See [pyproject.toml](pyproject.toml) for declared dependencies.
+__customer_master.csv__
 
-## 5. Repository Layout
+| Column | Description |
+|---|---|
+| cust_id | Unique customer identifier (e.g. `CUST00001`) |
+| age | Customer age |
+| gender | Male / Female / Other |
+| city | Customer's city |
+| loyalty_segment | Bronze / Silver / Gold / Platinum |
+| preferred_channel | In-Store / Online / Mobile App |
+| registration_date | Date the customer registered |
 
-~~~text
-RetailPulse/
-├── src/retailpulse/
-│   ├── F01 - Data Ingestion & Cleaning/  # legacy diagnostics / compatibility entry point
-│   ├── f01_data_pipeline/                # canonical deployable F01 package
-│   ├── F02 - Customer Segmentation/
-│   ├── F03 - Demand Forecasting/       # documentation / planned work
-│   ├── F04 - Churn Prediction/         # documentation / planned work
-│   ├── F05 - Inventory Optimization/   # documentation / planned work
-│   ├── __init__.py
-│   └── config.py
-├── data/
-│   ├── raw/                            # local source files; not committed
-│   └── processed/                      # local generated outputs
-├── reports/                            # generated quality reports
-├── pyproject.toml
-├── requirements-f01.txt
-├── Dockerfile.f01
-├── .gitignore
-├── DATASETS.md
-├── README_STRUCTURE.md
-├── README.md
-└── LICENSE
-~~~
+__promotions.csv__
 
-The source tree is evolving. Run scripts by the paths present in your checkout; do not assume that proposed package names in older notes exist as importable modules.
+| Column | Description |
+|---|---|
+| promo_id | Unique promotion identifier |
+| promo_name | Campaign name |
+| start_date / end_date | Active date range |
+| discount_pct | Discount percentage applied |
+| promo_type | Percentage Discount / Flat Discount / BOGO / Bundle Offer / Clearance |
+| target_type | What the promo applies to: Category / Brand / SKU / All |
+| target_value | The specific category, brand, sku_id, or "All" being targeted |
 
-## 6. Setup
+__inventory_snapshot.csv__
 
-Requirements: Python 3.11 or later, Git, and [uv](https://docs.astral.sh/uv/).
+| Column | Description |
+|---|---|
+| store_id / sku_id | Which store and product this row describes |
+| stock_on_hand | Current units in stock |
+| reorder_point | Stock level that should trigger a reorder |
+| safety_stock | Minimum buffer stock |
+| last_restock_date | Date of the most recent restock |
 
-~~~bash
-git clone https://github.com/Riddhis2226/RetailPulse.git
-cd RetailPulse
-uv sync
-~~~
+__sales_transactions.csv__
 
-If you do not use uv, create a virtual environment and run `pip install -e .`. The base install is intentionally lightweight for F01. Install optional groups only when needed: `uv sync --extra ml --extra database --extra dashboard` for the broader analytics stack, or add `--extra dev` for tests and linting.
+| Column | Description |
+|---|---|
+| date | Transaction date |
+| receipt_id | Groups line items purchased in the same basket/visit (1–5 items) |
+| store_id | Store where the sale occurred |
+| sku_id | Product sold |
+| customer_id | Customer who made the purchase |
+| quantity | Units purchased |
+| unit_price | Price per unit at time of sale |
+| total_value | `quantity × unit_price × (1 − discount_pct/100)` |
+| channel | In-Store / Online / Mobile App |
+| discount_pct | Discount applied (0 if none) |
+| promo_id | Promotion applied, blank if none |
 
-## 7. Run Available Workflows
+__sku_inventory_flags.csv__ _(anomalies/ only — the ground-truth answer key)_
 
-Run commands from the repository root.
+| Column | Description |
+|---|---|
+| sku_id | The flagged product |
+| flag | `STOCKOUT_RISK` or `SLOW_MOVER` |
+| affected_stores | `;`-separated list of `store_id`s where the anomaly was applied |
+| window_start / window_end | Stockout date window (blank for `SLOW_MOVER` rows) |
+| notes | Plain-language reason the SKU was flagged |
 
-### F01 — Run the deployable ingestion pipeline
 
-~~~bash
-uv sync
-uv run python -m retailpulse.f01_data_pipeline --help
-uv run python -m retailpulse.f01_data_pipeline
-~~~
 
-The canonical F01 package retrieves all seven source CSVs from Hugging Face, processes sales in chunks, writes Parquet outputs to a new timestamped directory, and saves a JSON report. A full run may take time and disk space. Do not run it automatically during Streamlit startup. If Hugging Face access is gated for your account, set `HF_TOKEN` through your local environment or deployment secrets.
 
-Build the dedicated batch container with:
+## Dataset
 
-~~~bash
-docker build -f Dockerfile.f01 -t retailpulse-f01 .
-~~~
+The project uses synthetic retail datasets. Large datasets are hosted on Hugging Face:
 
-See [F01 deployment documentation](src/retailpulse/f01_data_pipeline/README.md) for configuration, output behavior, and storage requirements. The older inspection and validation scripts remain available for diagnostics and may expect the historical `data/raw` and `data/processed` layout.
+https://huggingface.co/datasets/gautamrishiii/zidio-data
 
-### F02 — Customer segmentation
+## Run Locally
 
-The folder contains starter scripts for EDA, feature engineering, preprocessing, clustering, evaluation, and segment profiling. Start with its [module README](src/retailpulse/F02%20-%20Customer%20Segmentation/readme.md) and run scripts in their required input/output order. Confirm generated artifacts and metrics from execution.
+Install dependencies from the project root:
 
-### F03–F06
+```bash
+python -m pip install -r requirements.txt
+```
 
-Forecasting, churn prediction, inventory optimization, and dashboard work are described in their module documentation and the project requirements. Do not run the refactored module commands from earlier design notes unless those modules exist in your checked-out branch.
+Start the dashboard:
 
-## 8. Evaluation and Responsible Interpretation
+```bash
+streamlit run dashboard/app.py
+```
 
-- Confirm data grain and business meaning before deleting duplicate-looking transactions.
-- Treat missing promotion IDs according to verified field semantics; do not assume every missing value means “no promotion.”
-- Validate primary and foreign keys before joining tables.
-- Use time-ordered holdouts for demand forecasting and document the forecast horizon and evaluated scope.
-- Treat inactivity-based churn labels as a proxy until they are validated against a business definition.
-- Keep inventory lead time, service level, safety stock, and demand assumptions explicit and configurable.
-- Report only measured model metrics, runtime, and business outcomes. Targets from the project brief must not be presented as achieved results without evidence.
+Open http://localhost:8501/ in your browser.
 
-## 9. Roadmap
+## Run with Docker
 
-- [ ] Run F01 against the complete Hugging Face source data and retain an inspection report.
-- [ ] Validate F01 data-quality and referential-integrity checks.
-- [ ] Reproduce F02 RFM features, clustering evaluation, and segment profiles.
-- [ ] Implement and evaluate a leakage-safe forecasting baseline before any hybrid model.
-- [ ] Define and validate churn labels; evaluate a baseline classifier.
-- [ ] Implement and test configurable reorder recommendations.
-- [ ] Build and test the Streamlit dashboard against generated outputs.
-- [ ] Add automated tests, linting, and continuous integration.
-- [ ] Record measured results and deployment/demo instructions.
+```bash
+docker build -t retailpulse .
+docker run --rm -p 8501:8501 retailpulse
+```
 
-## 10. Contributing
+Docker Hub: https://hub.docker.com/r/gautamrishiii/retailpulse
 
-1. Keep changes scoped to a functional requirement where possible.
-2. Document assumptions, reproducibility steps, and test results.
-3. Use clear commit messages and review changes before merging.
-4. Do not commit datasets, model binaries, credentials, API keys, or generated artifacts unnecessarily.
+## Live Demo
 
-## License
+Explore the deployed RetailPulse dashboard:
 
-The RetailPulse **code and documentation** are licensed under the [MIT License](LICENSE). Dataset terms and access conditions are governed by the Hugging Face dataset repository and any applicable source-data terms; the code license does not automatically grant rights to third-party data.
+**[🚀 Open RetailPulse Dashboard](https://retailpulse-latest.onrender.com/)**
 
----
+The live dashboard provides interactive sales and revenue analytics, customer segmentation, demand forecasting visualizations, and inventory analytics.
 
-<div align="center">
 
-**RetailPulse · From retail data to more informed decisions**
 
-</div>
+## Author
+
+Riddhima Singh
+
+Group Project for 1st Month of Internship at Zidio Development  
+Original Repository : [https://github.com/gautamrishiii/RetailPulsee.git](https://github.com/gautamrishiii/RetailPulsee.git)
