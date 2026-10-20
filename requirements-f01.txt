@@ -1,6 +1,0 @@
-# Minimal dependencies for the F01 ingestion batch job.
-# Install the project with: pip install -r requirements-f01.txt && pip install -e . --no-deps
-huggingface-hub>=0.24
-pandas>=2.2
-pyarrow>=15.0
-python-dotenv>=1.0
