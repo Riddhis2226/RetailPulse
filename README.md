@@ -9,7 +9,7 @@
 [![Machine Learning](https://img.shields.io/badge/Machine%20Learning-scikit--learn-orange)](https://scikit-learn.org/)
 [![Data Analysis](https://img.shields.io/badge/Data%20Analysis-Pandas%20%7C%20NumPy-150458)](https://pandas.pydata.org/)
 [![Experiment Tracking](https://img.shields.io/badge/Experiment%20Tracking-MLflow-0194E2)](https://mlflow.org/)
-[![License](https://img.shields.io/badge/License-Not%20specified-lightgrey)](#license)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 </div>
 
@@ -231,7 +231,7 @@ Contributions and issue reports are welcome.
 
 ## License
 
-No license file is currently identified in the repository. Until a license is added, reuse and redistribution permissions should not be assumed.
+RetailPulse is licensed under the [MIT License](LICENSE). See the `LICENSE` file for the complete terms.
 
 ---
 
