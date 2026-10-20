@@ -42,7 +42,7 @@ DATE_COLUMNS: dict[str, tuple[str, ...]] = {
 
 def project_root() -> Path:
     """Resolve repository root from this installed src-layout package."""
-    return Path(__file__).resolve().parents[3]
+    return Path.cwd().resolve()
 
 
 def clean_dataframe(frame: pd.DataFrame, filename: str) -> tuple[pd.DataFrame, dict[str, int]]:
