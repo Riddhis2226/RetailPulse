@@ -112,33 +112,29 @@ cd RetailPulse
 uv sync
 ~~~
 
-If you do not use uv, create a virtual environment and install the project using the dependency metadata in pyproject.toml.
+If you do not use uv, create a virtual environment and run `pip install -e .`. The base install is intentionally lightweight for F01. Install optional groups only when needed: `uv sync --extra ml --extra database --extra dashboard` for the broader analytics stack, or add `--extra dev` for tests and linting.
 
 ## 7. Run Available Workflows
 
 Run commands from the repository root.
 
-### F01 — Inspect the seven source datasets
+### F01 — Run the deployable ingestion pipeline
 
 ~~~bash
-uv run python "src/retailpulse/F01 - Data Ingestion & Cleaning/01_inspect_datasets.py"
+uv sync
+uv run python -m retailpulse.f01_data_pipeline --help
+uv run python -m retailpulse.f01_data_pipeline
 ~~~
 
-The inspection script retrieves the configured CSVs from Hugging Face and writes reports under reports/dataset_inspection/. It processes sales data in chunks of 100,000 rows. Missing values are reported, not automatically imputed; duplicate detection across chunk boundaries may be incomplete.
+The canonical F01 package retrieves all seven source CSVs from Hugging Face, processes sales in chunks, writes Parquet outputs to a new timestamped directory, and saves a JSON report. A full run may take time and disk space. Do not run it automatically during Streamlit startup. If Hugging Face access is gated for your account, set `HF_TOKEN` through your local environment or deployment secrets.
 
-### F01 — Verify the customer master download
+Build the dedicated batch container with:
 
 ~~~bash
-uv run python "src/retailpulse/F01 - Data Ingestion & Cleaning/02_verify_huggingface_dataset.py"
+docker build -f Dockerfile.f01 -t retailpulse-f01 .
 ~~~
 
-### F01 — Run the preparation pipeline
-
-~~~bash
-uv run python "src/retailpulse/F01 - Data Ingestion & Cleaning/03_pipeline.py"
-~~~
-
-Check the scripts and configuration for expected inputs and output locations before running the full pipeline.
+See [F01 deployment documentation](src/retailpulse/f01_data_pipeline/README.md) for configuration, output behavior, and storage requirements. The older inspection and validation scripts remain available for diagnostics and may expect the historical `data/raw` and `data/processed` layout.
 
 ### F02 — Customer segmentation
 
