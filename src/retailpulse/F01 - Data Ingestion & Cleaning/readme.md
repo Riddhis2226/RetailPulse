@@ -2,6 +2,30 @@
 
 > **RetailPulse | Functional Requirement 01**
 
+## Dataset
+
+RetailPulse uses the project-owned Hugging Face dataset repository **[RS2226/RetailPulse](https://huggingface.co/datasets/RS2226/RetailPulse)**. The repository is currently marked **gated** on Hugging Face, so access may require permission from the dataset owner and authentication. The ingestion scripts reference seven CSV files:
+
+| File | Intended data domain |
+|---|---|
+| `customer_master.csv` | Customer master records and customer attributes |
+| `inventory_snapshot.csv` | Inventory snapshots |
+| `promotions.csv` | Promotion records |
+| `sales_transactions.csv` | Retail sales transactions (large file; the inspection script reads this file in 100,000-row chunks) |
+| `sku_inventory_flags.csv` | SKU-level inventory flags |
+| `sku_master.csv` | Product/SKU master records |
+| `store_master.csv` | Store master records |
+
+These descriptions are based on the filenames and repository scripts. Confirm the exact columns, data types, row counts, date coverage, and join keys by running the F01 dataset inspection; those figures should not be assumed from filenames alone.
+
+**Retrieval:** The code uses `huggingface_hub.hf_hub_download` with dataset repository ID `RS2226/RetailPulse` and repository type `dataset`. Access the repository from the link above and authenticate with an authorized Hugging Face account if prompted. Do not commit access tokens or credentials.
+
+
+## Dataset-quality Scope
+
+F01 inspects dataset schemas, inferred data types, missing values, duplicate rows, relationships, monetary consistency, and pricing consistency. The inspection script states that missing values are reported but not imputed, and sales duplicate counts are computed within each chunk; duplicate rows spanning chunks may therefore be missed.
+
+
 ## Objective
 
 Prepare retail source data for downstream analytics and machine-learning workflows. This module focuses on inspecting source files, validating data quality, cleaning inconsistent values, and checking relationships and business-rule consistency before analysis.
