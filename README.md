@@ -1,242 +1,186 @@
-<div align="center">
 
 # RetailPulse
-### Retail Analytics • Customer Intelligence • Demand Planning
 
-**An evolving retail analytics and machine-learning project for turning transactional data into customer, demand, and inventory insights.**
+<div align="center">
+
+### Retail Analytics · Customer Intelligence · Demand Planning
+
+**A modular retail analytics and machine-learning project for exploring customer behaviour, forecasting product demand, identifying churn risk, and supporting inventory decisions.**
 
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Machine Learning](https://img.shields.io/badge/Machine%20Learning-scikit--learn-orange)](https://scikit-learn.org/)
-[![Data Analysis](https://img.shields.io/badge/Data%20Analysis-Pandas%20%7C%20NumPy-150458)](https://pandas.pydata.org/)
-[![Experiment Tracking](https://img.shields.io/badge/Experiment%20Tracking-MLflow-0194E2)](https://mlflow.org/)
+[![Pandas](https://img.shields.io/badge/Data-Pandas%20%7C%20NumPy-150458)](https://pandas.pydata.org/)
+[![scikit-learn](https://img.shields.io/badge/ML-scikit--learn-orange)](https://scikit-learn.org/)
+[![Hugging Face Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-yellow?logo=huggingface)](https://huggingface.co/datasets/RS2226/RetailPulse)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 </div>
 
 ---
 
-## Overview
+## 1. Project Overview
 
-**RetailPulse** is a modular retail analytics project organized around six functional areas: data ingestion and quality, customer segmentation, demand forecasting, churn analysis, inventory optimization, and an analytics dashboard.
+RetailPulse is designed around an end-to-end retail analytics workflow: source-data inspection, customer-level feature engineering, predictive modelling, inventory recommendations, and interactive reporting.
 
-The goal is to build a repeatable analytical workflow that starts with raw retail data and progresses toward interpretable customer and operational insights. The repository currently contains data-quality and customer-segmentation code, alongside developing or planned components. Not every planned capability or performance target has been implemented or validated yet.
+The project requirements define six functional areas. The repository is being developed in stages, so the status labels below distinguish implemented starter code from planned components. Targets in the project brief are **acceptance criteria, not measured results**.
 
-## Project Objectives
+## 2. Functional Requirements and Status
 
-- Build a repeatable ingestion, cleaning, and data-quality validation workflow.
-- Derive customer-level **Recency, Frequency, and Monetary (RFM)** features.
-- Explore customer groups with K-Means clustering and segment profiling.
-- Develop time-series demand forecasts and evaluate forecast error.
-- Establish a baseline churn-risk workflow with transparent label assumptions.
-- Produce baseline reorder recommendations from demand inputs and lead-time assumptions.
-- Bring analytical outputs together in an interactive dashboard as that component is developed.
+| ID | Requirement | Intended scope / acceptance criteria | Repository status |
+|---|---|---|---|
+| **F01** | Data ingestion & cleaning | Ingest customer, sales, product, store, promotion, and inventory data; run schema, missing-value, duplicate, consistency, and relationship checks. | Inspection, validation, and quality-analysis scripts are present. Confirm outputs by running the workflow. |
+| **F02** | Customer segmentation | RFM and behavioural features; K-Means/DBSCAN exploration; segment evaluation and business profiling. Target: 6–8 interpretable segments. | Starter scripts for feature engineering, clustering, evaluation, and profiling are present. Segment count and quality are not claimed. |
+| **F03** | Demand forecasting | Daily demand preparation and 30-day forecasts; Prophet + LSTM/hybrid approach in the project brief. Target: MAPE ≤ 12%. | Requirements and module documentation exist; end-to-end forecasting and target performance remain unverified. |
+| **F04** | Churn prediction | Identify at-risk customers with a clearly defined churn label and evaluated classifier. Targets: AUC-ROC ≥ 0.88 and precision@top 20% ≥ 0.75. | Module documentation exists; label validity, trained model, and metrics must be verified before reporting results. |
+| **F05** | Inventory optimization | Forecast-informed reorder recommendations with explicit lead-time and safety-stock assumptions. | Module documentation exists; operational recommendations and impact are not claimed as validated. |
+| **F06** | Interactive analytics dashboard | Streamlit views for sales, customers, forecasts, and inventory, including exportable insights and what-if analysis. | Planned; verify the dashboard implementation and deployment before presenting a live demo. |
 
-## Functional Areas
+### Project-wide non-functional targets
 
-| ID | Functional area | Scope |
-|---|---|---|
-| **F01** | Data ingestion & cleaning | Dataset inspection, ingestion, cleaning, missing-value and duplicate analysis, validation, referential-integrity checks, and quality reporting. |
-| **F02** | Customer segmentation | RFM feature engineering, preprocessing, exploratory analysis, K-Means clustering, evaluation, and segment profiling. |
-| **F03** | Demand forecasting | Daily demand preparation, forecasting utilities, an optional Prophet baseline, and forecast metrics. LSTM/hybrid forecasting remains a placeholder unless separately implemented and validated. |
-| **F04** | Churn prediction | Inactivity-based churn proxy, feature engineering, and a baseline classifier. The proxy is not equivalent to observed churn and needs business validation. |
-| **F05** | Inventory optimization | Demand inputs and baseline reorder recommendations. The default seven-day lead time is an assumption, not a confirmed supplier service level. |
-| **F06** | Analytics dashboard | Intended Streamlit interface for available outputs; confirm the current implementation and run path before treating it as deployment-ready. |
+The project brief also sets goals for scalable processing, daily batch jobs under five minutes, reproducible experiment tracking, and data/model monitoring. These goals should be measured with repeatable tests before being described as achieved. Business-impact figures such as stockout reduction or revenue growth are aspirations from the brief, not current project results.
 
-> **Implementation status:** This repository is under active development. The functional-area descriptions include project scope and starter components; they are not a claim that every module, acceptance criterion, or target metric is complete.
+## 3. Source Data — Hugging Face
 
-## Technology Stack
+**The seven source CSV datasets are hosted in the RetailPulse Hugging Face dataset repository; they are not stored in this GitHub repository.**
 
-- **Language:** Python 3.11+
-- **Data processing:** Pandas, NumPy, PyArrow, DuckDB
-- **Machine learning:** scikit-learn, PyTorch / Lightning
-- **Forecasting and statistics:** Prophet, statsmodels
-- **Experiment tracking and optimization:** MLflow, Optuna
-- **Database connectivity:** SQLAlchemy, psycopg2
-- **Dataset access and configuration:** Hugging Face Hub, python-dotenv
-- **Planned / interface layer:** Streamlit
+**Dataset repository:** [RS2226/RetailPulse on Hugging Face](https://huggingface.co/datasets/RS2226/RetailPulse)  
+**Dataset documentation:** [DATASETS.md](DATASETS.md)  
+**Reported repository size in the dataset page:** approximately 805 MB (may change as files are updated).
 
-Dependencies are defined in [pyproject.toml](pyproject.toml). Some packages are for optional or evolving components and may not be required for every workflow.
+| Source file | Intended data domain |
+|---|---|
+| **customer_master.csv** | Customer master records and customer attributes |
+| **inventory_snapshot.csv** | Inventory snapshots |
+| **promotions.csv** | Promotion records |
+| **sales_transactions.csv** | Transaction-level sales; the inspection script reads this file in chunks |
+| **sku_inventory_flags.csv** | SKU-level inventory flags |
+| **sku_master.csv** | Product/SKU master records |
+| **store_master.csv** | Store master records |
 
-## Repository Structure
+The Hugging Face repository page is publicly discoverable. **File access may still require a signed-in, authorized Hugging Face account if repository gating is enabled.** Check the dataset page for the current access status. The code uses Hugging Face Hub to retrieve source files. Never put access tokens or credentials in source control.
 
-The repository is organized by functional requirement. The current source tree uses functional-area directory names under `src/retailpulse/`.
+Schema details, exact row counts, date coverage, and join keys should be taken from the generated F01 inspection report rather than inferred from filenames.
 
-```text
+## 4. Technology
+
+| Layer | Technologies |
+|---|---|
+| Language and data processing | Python 3.11+, Pandas, NumPy, PyArrow, DuckDB |
+| Machine learning | scikit-learn, PyTorch / Lightning |
+| Forecasting and statistics | Prophet, statsmodels |
+| Experiment tracking / tuning | MLflow, Optuna |
+| Data access / configuration | Hugging Face Hub, SQLAlchemy, PostgreSQL driver, python-dotenv |
+| Intended dashboard | Streamlit |
+
+Some dependencies support planned or optional components and do not imply that every capability is already implemented. See [pyproject.toml](pyproject.toml) for declared dependencies.
+
+## 5. Repository Layout
+
+~~~text
 RetailPulse/
+├── src/retailpulse/
+│   ├── F01 - Data Ingestion & Cleaning/
+│   ├── F02 - Customer Segmentation/
+│   ├── F03 - Demand Forecasting/       # documentation / planned work
+│   ├── F04 - Churn Prediction/         # documentation / planned work
+│   ├── F05 - Inventory Optimization/   # documentation / planned work
+│   ├── __init__.py
+│   └── config.py
 ├── data/
-│   ├── raw/                   # Place source datasets here; do not commit sensitive data
-│   └── processed/             # Generated/cleaned data outputs
-├── src/
-│   └── retailpulse/
-│       ├── F01 - Data Ingestion & Cleaning/
-│       ├── F02 - Customer Segmentation/
-│       ├── F03 - Demand Forecasting/
-│       ├── F04 - Churn Prediction/
-│       ├── F05 - Inventory Optimization/
-│       ├── __init__.py
-│       └── config.py
+│   ├── raw/                            # local source files; not committed
+│   └── processed/                      # local generated outputs
+├── reports/                            # generated quality reports
 ├── pyproject.toml
+├── DATASETS.md
+├── README_STRUCTURE.md
 ├── README.md
-└── README_STRUCTURE.md
-```
+└── LICENSE
+~~~
 
-The checked-in tree may evolve as modules are refactored. Consult [README_STRUCTURE.md](README_STRUCTURE.md) for the current developer notes and workflow guidance.
+The source tree is evolving. Run scripts by the paths present in your checkout; do not assume that proposed package names in older notes exist as importable modules.
 
-## Getting Started
+## 6. Setup
 
-### 1. Prerequisites
+Requirements: Python 3.11 or later, Git, and [uv](https://docs.astral.sh/uv/).
 
-- Python **3.11 or later**
-- Git
-- [uv](https://docs.astral.sh/uv/) for dependency and project management
-
-### 2. Clone the repository
-
-```bash
+~~~bash
 git clone https://github.com/Riddhis2226/RetailPulse.git
 cd RetailPulse
-```
-
-### 3. Install dependencies
-
-Using the project workflow:
-
-```bash
 uv sync
-```
+~~~
 
-Alternatively, install the local package in editable mode:
+If you do not use uv, create a virtual environment and install the project using the dependency metadata in pyproject.toml.
 
-```bash
-uv pip install -e .
-```
+## 7. Run Available Workflows
 
-If dependency resolution fails on your environment, check the Python version and the package versions declared in `pyproject.toml`.
+Run commands from the repository root.
 
-### 4. Prepare the dataset
+### F01 — Inspect the seven source datasets
 
-The documented F01 workflow expects **seven CSV files** in `data/raw`, or use the repository's Hugging Face dataset downloader where appropriate. Review the dataset verification and ingestion scripts before running the pipeline, and check the expected filenames and schema in the code.
+~~~bash
+uv run python "src/retailpulse/F01 - Data Ingestion & Cleaning/01_inspect_datasets.py"
+~~~
 
-Do not commit private, licensed, or otherwise restricted datasets to the repository. Keep credentials and local configuration out of version control.
+The inspection script retrieves the configured CSVs from Hugging Face and writes reports under reports/dataset_inspection/. It processes sales data in chunks of 100,000 rows. Missing values are reported, not automatically imputed; duplicate detection across chunk boundaries may be incomplete.
 
-## Running the Workflows
+### F01 — Verify the customer master download
 
-The current source tree contains functional-area folders with spaces in their names, while `README_STRUCTURE.md` documents a proposed/refactored module layout using names such as `f01_data_pipeline`. These layouts are not interchangeable. **Use the paths and commands that match the version of the code checked out in your branch.** The commands below are the workflow documented in `README_STRUCTURE.md` and may require the refactored layout to be present.
+~~~bash
+uv run python "src/retailpulse/F01 - Data Ingestion & Cleaning/02_verify_huggingface_dataset.py"
+~~~
 
-### F01 — Data ingestion and quality
+### F01 — Run the preparation pipeline
 
-For the refactored module layout:
+~~~bash
+uv run python "src/retailpulse/F01 - Data Ingestion & Cleaning/03_pipeline.py"
+~~~
 
-```powershell
-uv run python -m retailpulse.f01_data_pipeline.ingestion
-uv run python -m retailpulse.f01_data_pipeline.pipeline
-uv run python -m retailpulse.f01_data_pipeline.validation
-uv run python -m retailpulse.f01_data_pipeline.relationship_checks
-uv run python -m retailpulse.f01_data_pipeline.duplicate_analysis
-uv run python -m retailpulse.f01_data_pipeline.missing_value_analysis
-uv run python -m retailpulse.f01_data_pipeline.quality_report
-```
+Check the scripts and configuration for expected inputs and output locations before running the full pipeline.
 
 ### F02 — Customer segmentation
 
-```powershell
-uv run python -m retailpulse.f02_customer_segmentation.feature_engineering
-uv run python -m retailpulse.f02_customer_segmentation.eda
-uv run python -m retailpulse.f02_customer_segmentation.clustering
-uv run python -m retailpulse.f02_customer_segmentation.evaluation
-uv run python -m retailpulse.f02_customer_segmentation.segment_profiling
-```
+The folder contains starter scripts for EDA, feature engineering, preprocessing, clustering, evaluation, and segment profiling. Start with its [module README](src/retailpulse/F02%20-%20Customer%20Segmentation/readme.md) and run scripts in their required input/output order. Confirm generated artifacts and metrics from execution.
 
-### F03 — Demand forecasting
+### F03–F06
 
-Prepare the daily demand table first. It may be large.
+Forecasting, churn prediction, inventory optimization, and dashboard work are described in their module documentation and the project requirements. Do not run the refactored module commands from earlier design notes unless those modules exist in your checked-out branch.
 
-```powershell
-uv run python -m retailpulse.f03_demand_forecasting.data_preparation
-uv run python -m retailpulse.f03_demand_forecasting.prophet_model --sku-id YOUR_SKU_ID --horizon 30
-```
+## 8. Evaluation and Responsible Interpretation
 
-### F04 — Churn analysis
+- Confirm data grain and business meaning before deleting duplicate-looking transactions.
+- Treat missing promotion IDs according to verified field semantics; do not assume every missing value means “no promotion.”
+- Validate primary and foreign keys before joining tables.
+- Use time-ordered holdouts for demand forecasting and document the forecast horizon and evaluated scope.
+- Treat inactivity-based churn labels as a proxy until they are validated against a business definition.
+- Keep inventory lead time, service level, safety stock, and demand assumptions explicit and configurable.
+- Report only measured model metrics, runtime, and business outcomes. Targets from the project brief must not be presented as achieved results without evidence.
 
-Generate the required RFM features before running the churn workflow.
+## 9. Roadmap
 
-```powershell
-uv run python -m retailpulse.f04_churn_prediction.churn_labeling
-uv run python -m retailpulse.f04_churn_prediction.feature_engineering
-uv run python -m retailpulse.f04_churn_prediction.model_training
-```
+- [ ] Run F01 against the complete Hugging Face source data and retain an inspection report.
+- [ ] Validate F01 data-quality and referential-integrity checks.
+- [ ] Reproduce F02 RFM features, clustering evaluation, and segment profiles.
+- [ ] Implement and evaluate a leakage-safe forecasting baseline before any hybrid model.
+- [ ] Define and validate churn labels; evaluate a baseline classifier.
+- [ ] Implement and test configurable reorder recommendations.
+- [ ] Build and test the Streamlit dashboard against generated outputs.
+- [ ] Add automated tests, linting, and continuous integration.
+- [ ] Record measured results and deployment/demo instructions.
 
-### F05 — Inventory optimization
+## 10. Contributing
 
-```powershell
-uv run python -m retailpulse.f03_demand_forecasting.data_preparation
-uv run python -m retailpulse.f05_inventory_optimization.demand_inputs
-uv run python -m retailpulse.f05_inventory_optimization.reorder_policy
-uv run python -m retailpulse.f05_inventory_optimization.optimization
-uv run python -m retailpulse.f05_inventory_optimization.evaluation
-```
-
-### F06 — Dashboard
-
-The developer notes document this intended command for the refactored layout:
-
-```powershell
-uv run streamlit run src/retailpulse/f06_dashboard/app.py
-```
-
-Run it only when that module exists in your checkout. The dashboard path is not present in every version of the current repository tree.
-
-## Evaluation and Responsible Interpretation
-
-Retail analytics outputs are useful only when the assumptions and evaluation method are explicit.
-
-- **Data quality:** inspect missing values, duplicates, schema consistency, and relationships before transformation.
-- **Duplicate transactions:** do not delete repeated-looking sales rows until the transaction grain and business rules are confirmed.
-- **Missing promotion IDs:** confirm whether a missing value means “no promotion” before imputing it.
-- **Inventory flags:** do not impute missing dates until the meaning of the flag is understood.
-- **Forecasting:** use chronological holdouts for time-series evaluation and report the metric, horizon, and SKU/category scope.
-- **Churn:** treat inactivity-derived labels as a proxy until stakeholders validate the definition against actual churn behavior.
-- **Inventory:** document lead time, service-level, safety-stock, and demand assumptions before operational use.
-- **Performance targets:** metrics such as forecast MAPE or churn AUC are goals to test, not results to claim without measured evidence.
-
-## Current Limitations
-
-- Some functional areas are starter implementations or documented next steps.
-- LSTM/hybrid forecasting should not be described as implemented until its code and evaluation are available.
-- The inactivity-based churn proxy is not observed customer churn.
-- Inventory recommendations depend on assumed lead time and other inputs.
-- The refactored commands in `README_STRUCTURE.md` may not match all directories in the current source tree.
-- No production deployment or achievement of acceptance metrics is asserted by this README.
-
-## Roadmap
-
-- [ ] Align the on-disk package layout and documented commands.
-- [ ] Complete reproducible F01 data-quality reporting.
-- [ ] Validate RFM features and document cluster-selection criteria.
-- [ ] Add leakage-safe forecasting benchmarks and evaluation reports.
-- [ ] Validate the churn definition and evaluate the baseline classifier.
-- [ ] Make inventory assumptions configurable and test reorder policies.
-- [ ] Implement and verify the Streamlit dashboard against available outputs.
-- [ ] Add automated tests and continuous integration.
-- [ ] Document reproducible sample outputs and measured results.
-
-## Contributing
-
-Contributions and issue reports are welcome.
-
-1. Open an issue describing the proposed change or problem.
-2. Keep changes scoped to a functional area where possible.
-3. Document assumptions and how the change was tested.
-4. Avoid committing datasets, secrets, credentials, or generated artifacts.
+1. Keep changes scoped to a functional requirement where possible.
+2. Document assumptions, reproducibility steps, and test results.
+3. Use clear commit messages and review changes before merging.
+4. Do not commit datasets, model binaries, credentials, API keys, or generated artifacts unnecessarily.
 
 ## License
 
-RetailPulse is licensed under the [MIT License](LICENSE). See the `LICENSE` file for the complete terms.
+The RetailPulse **code and documentation** are licensed under the [MIT License](LICENSE). Dataset terms and access conditions are governed by the Hugging Face dataset repository and any applicable source-data terms; the code license does not automatically grant rights to third-party data.
 
 ---
 
 <div align="center">
 
-**RetailPulse** · Building toward more reliable, interpretable retail decisions.
+**RetailPulse · From retail data to more informed decisions**
 
 </div>
