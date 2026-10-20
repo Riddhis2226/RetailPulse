@@ -10,7 +10,7 @@ Run from the repository root:
     .venv\\Scripts\\python.exe -m retailpulse.f01_data_pipeline.upload_dataset_to_huggingface
 
 Source directory:
-    C:\\Users\\acer\\Downloads\\Zidio Development\\retail_clean_dataset
+    The path configured by RETAILPULSE_UPLOAD_SOURCE_DIR (default: data/raw)
 
 Target repository:
     https://huggingface.co/datasets/RS2226/RetailPulse
@@ -23,7 +23,7 @@ Purpose:
 
 Important:
     - The local source files are not modified by this script.
-    - The upload changes the remote repository.
+    - The upload changes the remote repository.\n    - This is a manual maintenance utility, not part of deployment startup.\n    - Set RETAILPULSE_UPLOAD_SOURCE_DIR to the local source folder before use.
     - Review the target repository before uploading.
 """
 
