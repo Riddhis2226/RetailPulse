@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
 
 from retailpulse.f01_data_pipeline.pipeline import clean_dataframe
@@ -47,3 +49,44 @@ def test_unknown_dataset_name_is_conservatively_cleaned() -> None:
     assert cleaned["label"].iloc[0] == "value"
     assert pd.isna(cleaned["label"].iloc[1])
     assert stats["invalid_dates"] == 0
+
+
+def test_pipeline_writes_outputs_and_report_without_remote_access(tmp_path, monkeypatch) -> None:
+    from retailpulse.f01_data_pipeline import pipeline
+
+    source_dir = tmp_path / "source"
+    source_dir.mkdir()
+    for filename in pipeline.SOURCE_FILES:
+        if filename == "sales_transactions.csv":
+            frame = pd.DataFrame(
+                {
+                    "date": ["2025-01-01", "2025-01-02"],
+                    "observed_sales": [10.0, 0.0],
+                    "is_stockout": [False, True],
+                    "imputed_demand": [10.0, 6.0],
+                }
+            )
+        else:
+            frame = pd.DataFrame({"record_id": ["R001"], "label": [" value "]})
+        frame.to_csv(source_dir / filename, index=False)
+
+    def fake_download(*, repo_id, repo_type, filename, token):
+        assert repo_id == "owner/test-dataset"
+        assert repo_type == "dataset"
+        return str(source_dir / filename)
+
+    monkeypatch.setattr(pipeline, "hf_hub_download", fake_download)
+    report = pipeline.run_pipeline(
+        repo_id="owner/test-dataset",
+        chunk_size=1,
+        output_root=tmp_path / "outputs",
+        report_root=tmp_path / "reports",
+    )
+
+    assert report["status"] == "success"
+    assert len(report["source_files"]) == 7
+    output = Path(report["output_directory"])
+    assert (output / "sales_transactions" / "part-00001.parquet").is_file()
+    assert (output / "sales_transactions" / "part-00002.parquet").is_file()
+    assert Path(report["report_path"]).is_file()
+    assert report["source_files"]["sales_transactions.csv"]["rows_written"] == 2
