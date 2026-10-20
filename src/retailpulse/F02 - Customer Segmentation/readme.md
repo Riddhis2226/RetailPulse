@@ -2,6 +2,34 @@
 
 > **RetailPulse | Functional Requirement 02**
 
+## Dataset
+
+RetailPulse uses the project-owned Hugging Face dataset repository **[RS2226/RetailPulse](https://huggingface.co/datasets/RS2226/RetailPulse)**. The repository is currently marked **gated** on Hugging Face, so access may require permission from the dataset owner and authentication. The ingestion scripts reference seven CSV files:
+
+| File | Intended data domain |
+|---|---|
+| `customer_master.csv` | Customer master records and customer attributes |
+| `inventory_snapshot.csv` | Inventory snapshots |
+| `promotions.csv` | Promotion records |
+| `sales_transactions.csv` | Retail sales transactions (large file; the inspection script reads this file in 100,000-row chunks) |
+| `sku_inventory_flags.csv` | SKU-level inventory flags |
+| `sku_master.csv` | Product/SKU master records |
+| `store_master.csv` | Store master records |
+
+These descriptions are based on the filenames and repository scripts. Confirm the exact columns, data types, row counts, date coverage, and join keys by running the F01 dataset inspection; those figures should not be assumed from filenames alone.
+
+**Retrieval:** The code uses `huggingface_hub.hf_hub_download` with dataset repository ID `RS2226/RetailPulse` and repository type `dataset`. Access the repository from the link above and authenticate with an authorized Hugging Face account if prompted. Do not commit access tokens or credentials.
+
+
+## Dataset Use in F02
+
+- **Primary inputs:** customer master and sales transactions.
+- **Potential supporting inputs:** SKU and store master data for grouping, joining, or descriptive profiles where required by the feature definitions.
+- **Core output:** customer-level RFM features and interpretable cluster assignments.
+
+The actual feature columns and observation window must be taken from the implementation and validated data. Confirm customer and transaction keys before aggregating or joining data. Avoid documenting a row count or final segment count until the pipeline has been run.
+
+
 ## Objective
 
 Group customers by purchasing behaviour so retail teams can understand customer value, distinguish engagement patterns, and design more targeted retention and marketing strategies.
