@@ -27,7 +27,7 @@ The project requirements define six functional areas. The repository is being de
 
 | ID | Requirement | Intended scope / acceptance criteria | Repository status |
 |---|---|---|---|
-| **F01** | Data ingestion & cleaning | Ingest customer, sales, product, store, promotion, and inventory data; run schema, missing-value, duplicate, consistency, and relationship checks. | Inspection, validation, and quality-analysis scripts are present. Confirm outputs by running the workflow. |
+| **F01** | Data ingestion & cleaning | Retrieve the seven source CSVs from Hugging Face, clean conservatively, write Parquet outputs in chunks, and emit a JSON run report. | Canonical package and regression tests are present; full-dataset execution and deployment-resource needs must still be verified. |
 | **F02** | Customer segmentation | RFM and behavioural features; K-Means/DBSCAN exploration; segment evaluation and business profiling. Target: 6–8 interpretable segments. | Starter scripts for feature engineering, clustering, evaluation, and profiling are present. Segment count and quality are not claimed. |
 | **F03** | Demand forecasting | Daily demand preparation and 30-day forecasts; Prophet + LSTM/hybrid approach in the project brief. Target: MAPE ≤ 12%. | Requirements and module documentation exist; end-to-end forecasting and target performance remain unverified. |
 | **F04** | Churn prediction | Identify at-risk customers with a clearly defined churn label and evaluated classifier. Targets: AUC-ROC ≥ 0.88 and precision@top 20% ≥ 0.75. | Module documentation exists; label validity, trained model, and metrics must be verified before reporting results. |
@@ -78,7 +78,8 @@ Some dependencies support planned or optional components and do not imply that e
 ~~~text
 RetailPulse/
 ├── src/retailpulse/
-│   ├── F01 - Data Ingestion & Cleaning/
+│   ├── F01 - Data Ingestion & Cleaning/  # legacy diagnostics / compatibility entry point
+│   ├── f01_data_pipeline/                # canonical deployable F01 package
 │   ├── F02 - Customer Segmentation/
 │   ├── F03 - Demand Forecasting/       # documentation / planned work
 │   ├── F04 - Churn Prediction/         # documentation / planned work
@@ -90,6 +91,8 @@ RetailPulse/
 │   └── processed/                      # local generated outputs
 ├── reports/                            # generated quality reports
 ├── pyproject.toml
+├── requirements-f01.txt
+├── Dockerfile.f01
 ├── .gitignore
 ├── DATASETS.md
 ├── README_STRUCTURE.md
