@@ -20,7 +20,7 @@ The repository page is publicly discoverable, but file downloads can require aut
 
 ## Functional areas
 
-- **F01 — Data Ingestion & Cleaning:** dataset inspection, Hugging Face retrieval checks, preparation pipeline, validation, relationship checks, duplicate and missing-value analysis, consistency checks, and quality reporting.
+- **F01 — Data Ingestion & Cleaning:** the canonical deployable package is `src/retailpulse/f01_data_pipeline/`. It downloads source CSVs from Hugging Face, cleans conservatively, writes timestamped Parquet outputs, and produces a JSON run report. The legacy folder `F01 - Data Ingestion & Cleaning/` retains diagnostic scripts and a compatibility entry point.
 - **F02 — Customer Segmentation:** exploratory analysis, RFM/behavioural feature engineering, preprocessing, clustering, evaluation, and segment profiling.
 - **F03 — Demand Forecasting:** project scope and documentation; verify that implementation files and dependencies exist before running a forecast.
 - **F04 — Churn Prediction:** project scope and documentation; churn labels and model metrics require validation.
@@ -42,26 +42,20 @@ Use Python 3.11 or later. The project dependencies are declared in `pyproject.to
 ## F01 — Inspect datasets
 
 ~~~powershell
-uv run python "src/retailpulse/F01 - Data Ingestion & Cleaning/01_inspect_datasets.py"
+uv run python -m retailpulse.f01_data_pipeline --help
+uv run python -m retailpulse.f01_data_pipeline
 ~~~
 
-The inspection script reads sales data in 100,000-row chunks and writes reports under `reports/dataset_inspection/`. Review the generated reports for schema, missing values, duplicate counts, and data dimensions. The chunk-based duplicate check may not detect duplicates spanning different chunks.
+The canonical pipeline retrieves the seven source CSVs directly from Hugging Face, processes sales in chunks, writes each run to a new output directory under `data/processed/`, and emits a JSON report under `reports/f01/`. Do not start the full pipeline automatically with Streamlit; use a separate batch job or worker. Set `HF_TOKEN` in deployment secrets if the dataset requires authentication.
 
-## F01 — Verify Hugging Face access
+## F01 — Container deployment
 
-~~~powershell
-uv run python "src/retailpulse/F01 - Data Ingestion & Cleaning/02_verify_huggingface_dataset.py"
+~~~bash
+docker build -f Dockerfile.f01 -t retailpulse-f01 .
+docker run --rm --env HF_TOKEN --mount type=bind,source="$(pwd)/data",target=/app/data --mount type=bind,source="$(pwd)/reports",target=/app/reports retailpulse-f01
 ~~~
 
-This verification script checks the customer master CSV. It does not by itself verify every source file.
-
-## F01 — Run the preparation pipeline
-
-~~~powershell
-uv run python "src/retailpulse/F01 - Data Ingestion & Cleaning/03_pipeline.py"
-~~~
-
-Review the script configuration and expected outputs before processing the full dataset.
+Pass `HF_TOKEN` through the runtime environment or deployment secret store when required; never bake credentials into the image. The dataset is large, so use persistent storage for outputs that must survive container restarts. The old inspection and validation scripts remain useful for diagnostics but may expect the historical `data/raw` layout.
 
 ## F02 — Customer segmentation
 
