@@ -1,4 +1,4 @@
-# **Synthetic Retail Dataset — 10 Million Transactions**
+# 📦 **Synthetic Retail Dataset — 10 Million Transactions**
 ### **(Clean + Inventory-Anomaly Versions)**
 
 A fully relational, synthetic multi-store retail dataset covering 4 years (2022–2025) of sales across 30 stores, 5,000 SKUs, and 10,000 customers. Built with realistic seasonality, bestseller/loyalty skew, basket structure, and rule-based promotion targeting — not uniform random data.
@@ -9,7 +9,10 @@ Ships as **two matched versions of the same business**: a `clean/` version with 
 
 ---
 
-## Files
+
+---
+
+## 📁 Files
 
 ### `clean/`
 
@@ -36,7 +39,10 @@ Ships as **two matched versions of the same business**: a `clean/` version with 
 
 *Slightly under 10,000,000 — the transaction rows that fall inside a simulated stockout window are removed as "lost sales" (see below). `store_master.csv`, `sku_master.csv`, `customer_master.csv`, and `promotions.csv` are byte-for-byte identical to `clean/`.
 
-## Column Reference
+
+---
+
+## 🧾 Column Reference
 
 __store_master.csv__
 | Column | Description |
@@ -115,7 +121,10 @@ __sku_inventory_flags.csv__ _(anomalies/ only — the ground-truth answer key)_
 
 ---
 
-## Relationships
+
+---
+
+## 🔗 Relationships
 
 ```ini
 store_master.store_id        ──┐
@@ -131,7 +140,10 @@ sku_master.sku_id  ──▶ sku_inventory_flags.csv   (anomalies/ only)
 
 Referential integrity was validated across all transaction rows in both versions: zero orphaned foreign keys, zero mismatches between `total_value` and its formula.
 
-## The two versions, and why
+
+---
+
+## 🧪 The two versions, and why
 
 `clean/` is the dataset as originally generated — no injected problems, just a realistic four-year retail history.
 
@@ -142,7 +154,10 @@ Referential integrity was validated across all transaction rows in both versions
 
 Every flagged SKU, the stores it affects, and (for stockouts) the exact date window is recorded in `sku_inventory_flags.csv`, so you always have a known-correct answer key to score your own reorder/clearance rules or anomaly-detection models against — rather than having to eyeball whether your rule "found the right thing."
 
-## What makes this data realistic (not random)
+
+---
+
+## 📈 What makes this data realistic (not random)
 
 - __Baskets, not isolated rows__ — `receipt_id` groups 1–5 items per visit (avg. 1.93 items/receipt), enabling market-basket analysis.
 - **Seasonality & growth** — Nov/Dec sales peaks, a Feb trough, and ~6%/year growth are built into the date distribution.
@@ -150,7 +165,10 @@ Every flagged SKU, the stores it affects, and (for stockouts) the exact date win
 - __Loyalty drives frequency__ — Gold/Platinum customers transact more often; each customer favors their `preferred_channel` ~70% of the time.
 - **Promotions actually target something** — ~21% of transactions carry a promo, matched by category, brand, specific SKU, or store-wide, against the active date window.
 
-## Things to know before modeling
+
+---
+
+## ⚠️ Things to know before modeling
 
 - Only `sales_transactions` was scaled to 10M rows — the store, SKU, customer, and promotion counts are fixed at realistic sizes and don't grow with transaction volume.
 - All stores opened before 2022, so every store has data across the entire 2022–2025 window.
@@ -159,7 +177,10 @@ Every flagged SKU, the stores it affects, and (for stockouts) the exact date win
 - `sales_transactions.csv` in `anomalies/` has slightly fewer rows than `clean/` — this is intentional (lost-sale suppression), not missing data.
 - `sku_inventory_flags.csv` only exists in `anomalies/`, since `clean/` has nothing to flag.
 
-## Suggested uses
+
+---
+
+## 🎯 Suggested uses
 
 - Sales forecasting and seasonality/trend analysis
 - Customer segmentation and RFM modeling
@@ -170,6 +191,9 @@ Every flagged SKU, the stores it affects, and (for stockouts) the exact date win
 - Stockout / lost-sale detection and slow-mover (dead stock) identification, scored against `sku_inventory_flags.csv`
 - Anomaly-detection benchmarking using `clean/` as the negative class and `anomalies/` as the positive class
 
-## License
+
+---
+
+## 📜 License
 
 Apache License 2.0 — fully synthetic, free to use, modify, and redistribute, with attribution and notice of any changes.
