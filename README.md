@@ -1,8 +1,11 @@
-# RetailPulse – AI-Powered Customer Analytics & Demand Forecasting Platform
+# 📊 RetailPulse – AI-Powered Customer Analytics & Demand Forecasting Platform
 
 RetailPulse is a retail analytics project that helps businesses analyze sales, customer behavior, demand patterns, and inventory.
 
-## Features
+
+---
+
+## ✨ Features
 
 - 📊 **Sales & Revenue Analytics** — Analyze sales performance, revenue trends, and business KPIs.
 - 👥 **Customer Segmentation** — Group customers based on purchasing behavior and value.
@@ -25,7 +28,7 @@ RetailPulse is a retail analytics project that helps businesses analyze sales, c
 - 📂 **Large Dataset Management** — Host large retail datasets separately from the main source-code repository.
 
 
-### Technologies Used
+### 🧰 Technologies Used
 
 - **Programming Language:** Python
 - **Data Analysis & Processing:** Pandas, NumPy
@@ -40,7 +43,10 @@ RetailPulse is a retail analytics project that helps businesses analyze sales, c
 - **Development Environment:** Fedora Linux, Visual Studio Code, Jupyter Notebook
 - **Python Environment & Dependency Management:** Python Virtual Environments (venv), pip
 
-## Relationships
+
+---
+
+## 🔗 Relationships
 
 ```ini
 store_master.store_id        ──┐
@@ -49,7 +55,10 @@ customer_master.cust_id       ─┤     (store_id, sku_id, customer_id, promo_i
 promotions.promo_id           ─┘
 ```
 
-## Column Reference
+
+---
+
+## 🧾 Column Reference
 
 __store_master.csv__
 
@@ -134,15 +143,18 @@ __sku_inventory_flags.csv__ _(anomalies/ only — the ground-truth answer key)_
 | notes | Plain-language reason the SKU was flagged |
 
 
+---
 
-
-## Dataset
+## 🗂️ Dataset
 
 The project uses synthetic retail datasets. Large datasets are hosted on Hugging Face:
 
 https://huggingface.co/datasets/gautamrishiii/zidio-data
 
-## Run Locally
+
+---
+
+## 💻 Run Locally
 
 Install dependencies from the project root:
 
@@ -158,7 +170,10 @@ streamlit run dashboard/app.py
 
 Open http://localhost:8501/ in your browser.
 
-## Run with Docker
+
+---
+
+## 🐳 Run with Docker
 
 ```bash
 docker build -t retailpulse .
@@ -167,7 +182,10 @@ docker run --rm -p 8501:8501 retailpulse
 
 Docker Hub: https://hub.docker.com/r/gautamrishiii/retailpulse
 
-## Live Demo
+
+---
+
+## 🚀 Live Demo
 
 Explore the deployed RetailPulse dashboard:
 
@@ -176,8 +194,9 @@ Explore the deployed RetailPulse dashboard:
 The live dashboard provides interactive sales and revenue analytics, customer segmentation, demand forecasting visualizations, and inventory analytics.
 
 
+---
 
-## Author
+## 👤 Author
 
 Riddhima Singh
 
