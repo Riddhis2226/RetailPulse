@@ -41,7 +41,7 @@ DATE_COLUMNS: dict[str, tuple[str, ...]] = {
 
 
 def project_root() -> Path:
-    """Resolve repository root from this installed src-layout package."""
+    """Use the current working directory as the project root for portable paths."""
     return Path.cwd().resolve()
 
 
